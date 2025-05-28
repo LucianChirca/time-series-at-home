@@ -1,4 +1,7 @@
+mod parquet;
+
 use clap::{Parser, Subcommand};
+use parquet::{generator::ParquetGenerator, ParquetConfig};
 
 #[derive(Parser, Debug)]
 #[command(about, long_about = None)]
@@ -19,7 +22,9 @@ fn main() {
 
     match args.command {
         Commands::GenerateParquet { file } => {
-            println!("TODO: Generate parquet file at {}", file);
+            let config = ParquetConfig { file_path: file };
+            let generator = ParquetGenerator::new(config);
+            generator.generate().unwrap();
         }
     }
 }
