@@ -36,7 +36,7 @@ async fn main() {
             writer.write(data).unwrap();
         }
         Commands::StartServer {} => {
-            let config = ServerConfig::new("http".to_string(), "127.0.0.1".to_string(), 3000);
+            let config = ServerConfig::new("127.0.0.1".to_string(), 3000);
             start_server(config).await;
         }
     }
