@@ -7,3 +7,6 @@ edition = "2024"
 clap = { version = "4.5", features = ["derive"] }
 arrow = "55.1.0"
 parquet = "55.1.0"
+axum = "0.8.4"
+serde = { version = "1.0.219", features = ["derive"] }
+tokio = { version = "1.45.1", features = ["full"] }
