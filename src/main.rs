@@ -6,6 +6,7 @@ use parquet::{writer::ParquetWriter, ParquetConfig};
 use std::sync::Arc;
 use arrow::array::Int64Array;
 use http::server::start_server;
+use http::ServerConfig;
 
 #[derive(Parser, Debug)]
 #[command(about, long_about = None)]
@@ -35,7 +36,8 @@ async fn main() {
             writer.write(data).unwrap();
         }
         Commands::StartServer {} => {
-            start_server().await;
+            let config = ServerConfig::new("http".to_string(), "127.0.0.1".to_string(), 3000);
+            start_server(config).await;
         }
     }
 }
