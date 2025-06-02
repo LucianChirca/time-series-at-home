@@ -1,7 +1,9 @@
 mod parquet;
 
 use clap::{Parser, Subcommand};
-use parquet::{generator::ParquetGenerator, ParquetConfig};
+use parquet::{writer::ParquetWriter, ParquetConfig};
+use std::sync::Arc;
+use arrow::array::Int64Array;
 
 #[derive(Parser, Debug)]
 #[command(about, long_about = None)]
@@ -23,8 +25,10 @@ fn main() {
     match args.command {
         Commands::GenerateParquet { file } => {
             let config = ParquetConfig { file_path: file };
-            let generator = ParquetGenerator::new(config);
-            generator.generate().unwrap();
+            let writer = ParquetWriter::new(config);
+            
+            let data = Arc::new(Int64Array::from_value(1, 10));
+            writer.write(data).unwrap();
         }
     }
 }
