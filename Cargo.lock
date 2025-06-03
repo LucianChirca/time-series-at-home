@@ -1473,6 +1473,7 @@ name = "time-series-at-home"
 version = "0.1.0"
 dependencies = [
  "arrow",
+ "arrow-schema",
  "axum",
  "clap",
  "parquet",
