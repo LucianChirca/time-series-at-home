@@ -1,5 +1,6 @@
 pub mod server;
 pub mod endpoints;
+pub mod response;
 
 #[derive(Debug, Clone)]
 pub struct ServerConfig {

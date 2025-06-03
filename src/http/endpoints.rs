@@ -1,9 +1,9 @@
 use axum::{
     Json,
-    http::StatusCode,
 };
 use serde::{Deserialize, Serialize};
 use crate::parquet::{ParquetConfig, writer::ParquetWriter, reader::ParquetReader, reader::TimeSeriesData};
+use super::response::{AppError, AppJson};
 
 #[derive(Deserialize, Serialize)]
 pub struct PostData {
@@ -11,7 +11,7 @@ pub struct PostData {
     timestamp: i64,
 }
 
-pub async fn handle_post_data(Json(payload): Json<PostData>) -> (StatusCode, Json<PostData>) {
+pub async fn handle_post_data(Json(payload): Json<PostData>) -> Result<AppJson<PostData>, AppError> {
     let config = ParquetConfig { 
         file_path: format!("files/data.parquet")
     };
@@ -19,13 +19,13 @@ pub async fn handle_post_data(Json(payload): Json<PostData>) -> (StatusCode, Jso
     
     if let Err(e) = writer.write(payload.value, payload.timestamp) {
         println!("Error writing to parquet: {}", e);
-        return (StatusCode::INTERNAL_SERVER_ERROR, Json(payload));
+        return Err(AppError::from(format!("Error writing to parquet: {}", e)));
     }
     
-    (StatusCode::OK, Json(payload))
+    Ok(AppJson(payload))
 }
 
-pub async fn handle_get_data() -> (StatusCode, Json<Vec<TimeSeriesData>>) {
+pub async fn handle_get_data() -> Result<AppJson<Vec<TimeSeriesData>>, AppError> {
     let config = ParquetConfig {
         file_path: format!("files/data.parquet")
     };
@@ -33,11 +33,10 @@ pub async fn handle_get_data() -> (StatusCode, Json<Vec<TimeSeriesData>>) {
     
     match reader.read() {
         Ok(data) => {
-            (StatusCode::OK, Json(data))
+            Ok(AppJson(data))
         },
         Err(e) => {
-            println!("Error reading from parquet: {}", e);
-            (StatusCode::INTERNAL_SERVER_ERROR, Json(Vec::new()))
+            Err(AppError::from(format!("Error reading from parquet: {}", e)))
         }
     }
 }
