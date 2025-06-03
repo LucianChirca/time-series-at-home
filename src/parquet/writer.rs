@@ -16,7 +16,7 @@ impl ParquetWriter {
 
     pub fn write(&self, data: Arc<dyn Array + 'static>) -> Result<(), Box<dyn std::error::Error>> {
         let col = data as ArrayRef;
-        let to_write = RecordBatch::try_from_iter([("col", col)]).unwrap();
+        let to_write = RecordBatch::try_from_iter([("value", col)]).unwrap();
 
         let file = File::create(&self.config.file_path)?;
         let mut writer = ArrowWriter::try_new(file, to_write.schema(), None)?;
