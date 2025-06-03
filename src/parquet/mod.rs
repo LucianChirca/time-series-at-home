@@ -3,3 +3,4 @@ pub struct ParquetConfig {
 }
 
 pub mod writer;
+pub mod reader;
