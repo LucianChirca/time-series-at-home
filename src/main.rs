@@ -32,8 +32,7 @@ async fn main() {
             let config = ParquetConfig { file_path: file };
             let writer = ParquetWriter::new(config);
 
-            let data = Arc::new(Int64Array::from_value(1, 10));
-            writer.write(data).unwrap();
+            writer.write(1.0, 1717334400000).unwrap();
         }
         Commands::StartServer {} => {
             let config = ServerConfig::new("127.0.0.1".to_string(), 3000);

@@ -1,7 +1,5 @@
 use crate::parquet::ParquetConfig;
-use std::sync::Arc;
-use arrow::array::{Array, ArrayRef};
-use arrow::record_batch::RecordBatch;
+use arrow::array::record_batch;
 use parquet::arrow::arrow_writer::ArrowWriter;
 use std::fs::File;
 
@@ -14,9 +12,11 @@ impl ParquetWriter {
         Self { config }
     }
 
-    pub fn write(&self, data: Arc<dyn Array + 'static>) -> Result<(), Box<dyn std::error::Error>> {
-        let col = data as ArrayRef;
-        let to_write = RecordBatch::try_from_iter([("value", col)]).unwrap();
+    pub fn write(&self, value: f64, timestamp: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let to_write = record_batch!(
+            ("value", Float64, [value]),
+            ("timestamp", Int64, [timestamp])
+        ).unwrap();
 
         let file = File::create(&self.config.file_path)?;
         let mut writer = ArrowWriter::try_new(file, to_write.schema(), None)?;
