@@ -3,8 +3,6 @@ mod http;
 
 use clap::{Parser, Subcommand};
 use parquet::{writer::ParquetWriter, ParquetConfig};
-use std::sync::Arc;
-use arrow::array::Int64Array;
 use http::server::start_server;
 use http::ServerConfig;
 
